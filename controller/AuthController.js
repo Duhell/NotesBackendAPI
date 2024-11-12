@@ -55,7 +55,7 @@ export default class AuthController {
         isPasswordValid ? 200 : 403,
         {
           message: isPasswordValid ? 'Authenticated' : 'Not Authenticated',
-          user: user
+          user
         }
       );
     } catch (error) {
