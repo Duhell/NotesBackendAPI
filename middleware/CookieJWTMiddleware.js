@@ -8,7 +8,7 @@ const CookieJWTAuth = (request,respond, next) =>{
         request.user = user;
         next();
     } catch (error) {
-        request.clearCookie('token');
+        respond.clearCookie('token');
         return respond.json({error});
     }
 }
