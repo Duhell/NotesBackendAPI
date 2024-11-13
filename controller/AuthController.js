@@ -1,3 +1,4 @@
+import jwt from 'jsonwebtoken';
 import { validationResult } from "express-validator";
 import Log from "../log/Log.js";
 import User from '../model/User.js';
@@ -33,7 +34,10 @@ export default class AuthController {
 
       const user = await User.findEmail({ email: req.body.email });
   
-      if (!user) return AuthController.#sendResponse(res, 404, 'User not found in the database.');
+      if (!user) return AuthController.#sendResponse(res, 403, {
+        message: 'Wrong email or password.',
+        user: null,
+      });
       
       const isPasswordValid = await User.isPasswordValid(req.body.password, user.password);
       
@@ -41,8 +45,8 @@ export default class AuthController {
         res, 
         isPasswordValid ? 200 : 403,
         {
-          message: isPasswordValid ? 'Authenticated' : 'Not Authenticated',
-          user
+          message: isPasswordValid ? 'Authenticated' : 'Wrong email or password.',
+          user: isPasswordValid ? user : null
         }
       );
     } catch (error) {
