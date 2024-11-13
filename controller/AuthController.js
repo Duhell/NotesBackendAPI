@@ -40,6 +40,12 @@ export default class AuthController {
       });
       
       const isPasswordValid = await User.isPasswordValid(req.body.password, user.password);
+
+      delete user.password;
+
+      const token = jwt.sign(user, process.env.TOKEN, {expiresIn: "1h"});
+
+      res.cookie('token', token, {httpOnly: true})
       
       return AuthController.#sendResponse(
         res, 
