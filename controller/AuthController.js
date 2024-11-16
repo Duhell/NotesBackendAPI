@@ -33,13 +33,15 @@ export default class AuthController {
       if (validationError) return validationError;
 
       const user = await User.findEmail({ email: req.body.email });
-  
-      if (!user) return AuthController.#sendResponse(res, 403, {
-        message: 'Wrong email or password.',
-        user: null,
-      });
       
       const isPasswordValid = await User.isPasswordValid(req.body.password, user.password);
+      
+      if (!user || !isPasswordValid) {
+        return AuthController.#sendResponse(res, 403, {
+          message: 'Wrong email or password.',
+          user: null,
+        });
+      };
 
       delete user.password;
 
