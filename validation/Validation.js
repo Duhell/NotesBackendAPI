@@ -16,9 +16,17 @@ const Login = () => {
     ]
 }
 
+const Notes = () => {
+    return [
+        body('note').trim().notEmpty(),
+        body('author').trim().notEmpty(),
+    ]
+}
+
 const Validation = {
     Register,
-    Login
+    Login,
+    Notes
 }
 
 export default Validation;
