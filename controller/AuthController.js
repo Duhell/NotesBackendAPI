@@ -49,14 +49,13 @@ export default class AuthController {
 
       res.cookie('token', token, {httpOnly: true})
       
-      return AuthController.#sendResponse(
-        res, 
-        isPasswordValid ? 200 : 403,
+      return AuthController.#sendResponse(res, 200,
         {
-          message: isPasswordValid ? 'Authenticated' : 'Wrong email or password.',
-          user: isPasswordValid ? user : null
+          message: 'Authenticated' ,
+          user
         }
       );
+      
     } catch (error) {
       Log.error(error, 'Login');
       return AuthController.#sendResponse(res, 500, 'Internal server error');
