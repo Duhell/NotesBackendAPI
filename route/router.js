@@ -11,5 +11,5 @@ router.post("/auth/login", Validation.Login(),  AuthController.Login);
 
 router.get('/notes/:id', CookieJWTAuth, NotesController.index);
 router.post('/notes/create', [CookieJWTAuth, Validation.Notes()], NotesController.create);
-router.patch('/notes/:id', CookieJWTAuth, NotesController.update);
+router.patch('/notes/:id', [CookieJWTAuth, Validation.Notes()], NotesController.update);
 router.delete('/notes/:id', CookieJWTAuth, NotesController.destroy);
