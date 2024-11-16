@@ -1,12 +1,13 @@
-import { BSON } from "mongodb";
 import Log from "../log/Log.js";
 import Note from "../model/Note.js";
 import { validationResult } from "express-validator";
 
 export default class NotesController {
+
   static async index(req, res) {
+
     const notes = await Note.all({
-        "_id": new BSON.ObjectId(req.body.user_id)
+        "user_id": req.params.id
     });
     return res.json({notes});
   }
