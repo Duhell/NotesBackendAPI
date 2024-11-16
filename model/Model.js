@@ -56,8 +56,11 @@ export default class Model {
   // Update operations
   static async updateOne(filter, update, options = {}) {
     try {
+      const now = new Date();
       const collection = await this.getCollection();
-      return await collection.updateOne(filter, update, options);
+      return await collection.updateOne(filter, {
+        $set:  {...update, updatedAt: now}
+      } , options);
     } catch (error) {
       return Log.error(error, "updateOne");
     }
