@@ -1,4 +1,4 @@
-import Log from "../log/Log.js";
+import { ObjectId } from "mongodb";
 import Note from "../model/Note.js";
 import { validationResult } from "express-validator";
 
@@ -6,10 +6,9 @@ export default class NotesController {
 
   static async index(req, res) {
 
-    const notes = await Note.all({
-        "user_id": req.params.id
-    });
+    const notes = await Note.all({"user_id": req.params.id });
     return res.json({notes});
+
   }
 
   static async create(req, res) {
@@ -17,20 +16,42 @@ export default class NotesController {
 
     if (validationError) return validationError;
 
-    const isSave = await Note.create(req.body);
+    const now = new Date();
 
-    if (!isSave.acknowledged)
-      throw new Error("Failed to store note to the database.");
+    const isSave = await Note.insertOne(req.body);
+
+    if (!isSave) throw new Error("Failed to store note to the database.");
 
     return NotesController.#sendResponse(res, 201, "New note added.");
   }
 
   static async update(req, res) {
-    return res.send(req.params.id);
+     const validationError = NotesController.#handleValidationErrors(validationResult(req),res);
+
+     if (validationError) return validationError;
+
+     const filter = {_id: ObjectId.createFromHexString(req.params.id) };
+
+     const updateDocs = req.body;
+      
+     const options = {upsert: true};
+
+     const isUpdated = await Note.updateOne(filter,updateDocs,options);
+
+     if (!isUpdated) throw new Error("Failed to update the note.");
+
+     return NotesController.#sendResponse(res, 200, "Note has been updated.");
   }
 
   static async destroy(req, res) {
-    return res.send(req.params.id);
+
+    const filter = {_id: ObjectId.createFromHexString(req.params.id)};
+
+    const isDelete =  await Note.deleteOne(filter);
+
+    if(!isDelete) throw new Error("Failed to delete the note.");
+
+    return NotesController.#sendResponse(res, 200, "Note has been deleted.");
   }
 
   static #handleValidationErrors(errors, res) {
