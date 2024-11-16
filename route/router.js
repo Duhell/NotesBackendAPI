@@ -9,7 +9,7 @@ export const router = Router();
 router.post("/auth/register", Validation.Register(),  AuthController.Register);
 router.post("/auth/login", Validation.Login(),  AuthController.Login);
 
-router.get('/notes', CookieJWTAuth, NotesController.index);
+router.get('/notes/:id', CookieJWTAuth, NotesController.index);
 router.post('/notes/create', [CookieJWTAuth, Validation.Notes()], NotesController.create);
 router.patch('/notes/:id', CookieJWTAuth, NotesController.update);
 router.delete('/notes/:id', CookieJWTAuth, NotesController.destroy);
