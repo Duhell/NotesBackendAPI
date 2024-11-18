@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { validationResult } from "express-validator";
+import {ValidateRequest} from '../../utils/validation/Request.js';
 import Log from "../../utils/log/Log.js";
 import User from '../model/User.js';
 export default class AuthController {
@@ -7,7 +7,7 @@ export default class AuthController {
   static async Register(req, res) {
 
     try {
-      const validationError = AuthController.#handleValidationErrors(validationResult(req), res);
+      const validationError = ValidateRequest(req, res);
 
       if (validationError) return validationError;
       
@@ -28,7 +28,7 @@ export default class AuthController {
 
   static async Login(req, res) {
     try {
-      const validationError = AuthController.#handleValidationErrors(validationResult(req), res);
+      const validationError = ValidateRequest(req, res);
       
       if (validationError) return validationError;
 
@@ -60,14 +60,6 @@ export default class AuthController {
       Log.error(error, 'Login');
       return AuthController.#sendResponse(res, 500, 'Internal server error');
     }
-  }
-
-  // Private Methods
-  static #handleValidationErrors(errors, res) {
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
-    return null;
   }
 
   static #sendResponse(res, statusCode, response) {

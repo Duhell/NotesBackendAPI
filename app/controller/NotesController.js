@@ -1,6 +1,6 @@
 import { ObjectId } from "mongodb";
 import Note from "../model/Note.js";
-import { validationResult } from "express-validator";
+import {ValidateRequest} from '../../utils/validation/Request.js';
 
 export default class NotesController {
 
@@ -12,7 +12,7 @@ export default class NotesController {
   }
 
   static async create(req, res) {
-    const validationError = NotesController.#handleValidationErrors(validationResult(req),res);
+    const validationError = ValidateRequest(req, res);
 
     if (validationError) return validationError;
 
@@ -26,7 +26,7 @@ export default class NotesController {
   }
 
   static async update(req, res) {
-     const validationError = NotesController.#handleValidationErrors(validationResult(req),res);
+     const validationError = ValidateRequest(req, res);
 
      if (validationError) return validationError;
 
@@ -52,13 +52,6 @@ export default class NotesController {
     if(!isDelete) throw new Error("Failed to delete the note.");
 
     return NotesController.#sendResponse(res, 200, "Note has been deleted.");
-  }
-
-  static #handleValidationErrors(errors, res) {
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
-    return null;
   }
 
   static #sendResponse(res, statusCode, response) {
