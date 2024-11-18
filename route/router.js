@@ -1,8 +1,8 @@
 import { Router } from "express";
-import AuthController from "../controller/AuthController.js";
-import NotesController from "../controller/NotesController.js";
-import Validation from "../validation/Validation.js";
-import CookieJWTAuth from '../middleware/CookieJWTMiddleware.js';
+import AuthController from "../app/controller/AuthController.js";
+import NotesController from "../app/controller/NotesController.js";
+import Validation from "../utils/validation/Validation.js";
+import CookieJWTAuth from '../app/middleware/CookieJWTMiddleware.js';
 
 export const router = Router();
 

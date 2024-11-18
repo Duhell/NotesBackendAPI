@@ -1,5 +1,5 @@
-import MongoDatabase from "../database/Database.js";
-import Log from "../log/Log.js";
+import MongoDatabase from "../../database/Database.js";
+import Log from "../../utils/log/Log.js";
 
 export default class Model {
   static db = new MongoDatabase();

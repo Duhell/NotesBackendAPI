@@ -1,6 +1,6 @@
 // database/MongoDatabase.js
 import { MongoClient, ServerApiVersion } from "mongodb";
-import Log from "../log/Log.js";
+import Log from "../utils/log/Log.js";
 
 export default class MongoDatabase {
   #database;

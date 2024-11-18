@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import { validationResult } from "express-validator";
-import Log from "../log/Log.js";
+import Log from "../../utils/log/Log.js";
 import User from '../model/User.js';
 export default class AuthController {
 
