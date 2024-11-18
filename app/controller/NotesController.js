@@ -1,6 +1,7 @@
 import { ObjectId } from "mongodb";
 import Note from "../model/Note.js";
 import {ValidateRequest} from '../../utils/validation/Request.js';
+import Response from "../../utils/response/Response.js";
 
 export default class NotesController {
 
@@ -22,7 +23,7 @@ export default class NotesController {
 
     if (!isSave) throw new Error("Failed to store note to the database.");
 
-    return NotesController.#sendResponse(res, 201, "New note added.");
+    return Response.send(res, Response.CREATED, "New note added.");
   }
 
   static async update(req, res) {
@@ -40,7 +41,7 @@ export default class NotesController {
 
      if (!isUpdated) throw new Error("Failed to update the note.");
 
-     return NotesController.#sendResponse(res, 200, "Note has been updated.");
+     return Response.send(res, Response.SUCCESS, "Note has been updated.");
   }
 
   static async destroy(req, res) {
@@ -51,10 +52,6 @@ export default class NotesController {
 
     if(!isDelete) throw new Error("Failed to delete the note.");
 
-    return NotesController.#sendResponse(res, 200, "Note has been deleted.");
-  }
-
-  static #sendResponse(res, statusCode, response) {
-    return res.status(statusCode).json({ response });
+    return Response.send(res, Response.SUCCESS, "Note has been deleted.");
   }
 }
