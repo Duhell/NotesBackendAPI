@@ -2,6 +2,9 @@ import jwt from 'jsonwebtoken';
 import {ValidateRequest} from '../../utils/validation/Request.js';
 import Log from "../../utils/log/Log.js";
 import User from '../model/User.js';
+import Response from "../../utils/response/Response.js";
+
+
 export default class AuthController {
 
   static async Register(req, res) {
@@ -13,13 +16,14 @@ export default class AuthController {
       
       const isSave = await User.register(req.body);
   
-      if (!isSave.acknowledged) throw new Error('Registration failed.');
+      if (!isSave) throw new Error('Registration failed.');
       
-      return AuthController.#sendResponse(res, 201, 'Successfully registered.');
+      return Response.send(res, Response.CREATED, "Successfully registered.");
 
     } catch (error) {
       Log.error(error, 'Register');
-      return AuthController.#sendResponse(res, 500, {
+
+      return Response.send(res, Response.INTERNAL_ERROR, {
         message: 'Internal server error',
         error: error
       });
@@ -37,7 +41,7 @@ export default class AuthController {
       const isPasswordValid = await User.isPasswordValid(req.body.password, user.password);
       
       if (!user || !isPasswordValid) {
-        return AuthController.#sendResponse(res, 403, {
+        return Response.send(res, Response.FORBIDDEN, {
           message: 'Wrong email or password.',
           user: null,
         });
@@ -48,21 +52,16 @@ export default class AuthController {
       const token = jwt.sign(user, process.env.TOKEN, {expiresIn: "1h"});
 
       res.cookie('token', token, {httpOnly: true})
-      
-      return AuthController.#sendResponse(res, 200,
-        {
-          message: 'Authenticated' ,
-          user
-        }
-      );
+
+      return Response.send(res, Response.SUCCESS, {
+        token: token,
+        message: 'Authenticated' ,
+        user
+      });
       
     } catch (error) {
       Log.error(error, 'Login');
-      return AuthController.#sendResponse(res, 500, 'Internal server error');
+      return Response.send(res, Response.INTERNAL_ERROR, 'Internal server error');
     }
-  }
-
-  static #sendResponse(res, statusCode, response) {
-    return res.status(statusCode).json({ response });
   }
 } 
