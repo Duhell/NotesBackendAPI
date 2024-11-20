@@ -49,7 +49,7 @@ export default class AuthController {
 
       delete user.password;
 
-      const token = jwt.sign(user, process.env.TOKEN, {expiresIn: "1h"});
+      const token = jwt.sign(user, process.env.TOKEN, {expiresIn: "6h"});
       
       return Response.send(res, Response.SUCCESS, {
         token: token,
