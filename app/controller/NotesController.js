@@ -17,8 +17,6 @@ export default class NotesController {
 
     if (validationError) return validationError;
 
-    const now = new Date();
-
     const isSave = await Note.insertOne(req.body);
 
     if (!isSave) throw new Error("Failed to store note to the database.");
