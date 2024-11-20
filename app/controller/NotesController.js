@@ -7,7 +7,7 @@ export default class NotesController {
 
   static async index(req, res) {
 
-    const notes = await Note.all({"user_id": req.params.id });
+    const notes = req.params.id ? await Note.all({"user_id": req.params.id }) : await Note.all({"isPrivate": false});
     return res.json({notes});
 
   }
