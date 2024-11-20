@@ -19,6 +19,7 @@ const Login = () => {
 const Notes = () => {
     return [
         body('note').trim().notEmpty(),
+        body('isPrivate').notEmpty().toBoolean(),
         body('author').trim().notEmpty(),
     ]
 }
