@@ -7,8 +7,8 @@ import {uploadMulterImage} from "../app/middleware/MulterMiddleware.js"
 
 export const router = Router();
 
-router.post("/auth/register", Validation.Register(),  AuthController.Register);
-router.post("/auth/login", Validation.Login(),  AuthController.Login);
+router.post("/auth/register", [uploadMulterImage.none(),Validation.Register()],  AuthController.Register);
+router.post("/auth/login", [uploadMulterImage.none(),Validation.Login()],  AuthController.Login);
 
 router.get('/notes/', BearerTokenAuth, NotesController.index);
 router.get('/notes/:id', BearerTokenAuth, NotesController.index);
