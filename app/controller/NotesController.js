@@ -2,6 +2,8 @@ import { ObjectId } from "mongodb";
 import Note from "../model/Note.js";
 import {ValidateRequest} from '../../utils/validation/Request.js';
 import Response from "../../utils/response/Response.js";
+import Cloudinary from "../../database/Cloudinary.js";
+import datauri from "../../utils/datauri/Datauri.js";
 
 export default class NotesController {
 
@@ -17,7 +19,25 @@ export default class NotesController {
 
     if (validationError) return validationError;
 
-    const isSave = await Note.insertOne(req.body);
+    let isSave;
+    if(req.file){
+      const file = await datauri(req);
+      
+      const cloudinary = new Cloudinary();
+      const uploadPhoto = await cloudinary.UploadImage(file, req.file);
+      const image = await uploadPhoto.url;
+
+      if(!image){
+        return Response.send(res, Response.INTERNAL_ERROR, "It is not you. It's us. Please comeback later.");
+      }
+
+      await cloudinary.OptimizePhoto(image);
+  
+      isSave = await Note.insertOne({...req.body,image: image})
+    }else{
+      isSave = await Note.insertOne(req.body);
+    }
+
 
     if (!isSave) throw new Error("Failed to store note to the database.");
 
