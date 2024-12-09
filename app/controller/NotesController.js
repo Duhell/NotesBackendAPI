@@ -3,7 +3,6 @@ import Note from "../model/Note.js";
 import {ValidateRequest} from '../../utils/validation/Request.js';
 import Response from "../../utils/response/Response.js";
 import Cloudinary from "../../database/Cloudinary.js";
-import datauri from "../../utils/datauri/Datauri.js";
 
 export default class NotesController {
 
