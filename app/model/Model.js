@@ -13,7 +13,7 @@ export default class Model {
   static async all(query = {}, options = {}) {
     try {
       const collection = await this.getCollection();
-      return await collection.find(query, options).toArray();
+      return await collection.find(query, options).sort({ updatedAt: -1 }).toArray();
     } catch (error) {
       return Log.error(error, "all");
     }
