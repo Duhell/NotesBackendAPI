@@ -1,5 +1,5 @@
 import { v2 as cloudinary } from "cloudinary";
-
+import crypto from "crypto";
 export default class Cloudinary {
   constructor() {
     cloudinary.config({
@@ -9,9 +9,9 @@ export default class Cloudinary {
     });
   }
 
-  async UploadImage(imageDataUri, file) {
+  async UploadImage(imageDataUri) {
     const uploaded = await cloudinary.uploader.upload(imageDataUri, {
-      public_id: file.originalname,
+      public_id: crypto.randomUUID(),
     });
 
     if (!uploaded) {
