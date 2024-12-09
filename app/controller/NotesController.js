@@ -20,11 +20,11 @@ export default class NotesController {
     if (validationError) return validationError;
 
     let isSave;
-    if(req.file){
-      const file = await datauri(req);
+    if(req.body.image){
+      // const file = await datauri(req);
       
       const cloudinary = new Cloudinary();
-      const uploadPhoto = await cloudinary.UploadImage(file, req.file);
+      const uploadPhoto = await cloudinary.UploadImage(req.body.image);
       const image = await uploadPhoto.url;
 
       if(!image){
