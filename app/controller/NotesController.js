@@ -30,8 +30,6 @@ export default class NotesController {
       if(!image){
         return Response.send(res, Response.INTERNAL_ERROR, "It is not you. It's us. Please comeback later.");
       }
-
-      await cloudinary.OptimizePhoto(image);
   
       isSave = await Note.insertOne({...req.body,image: image})
     }else{
@@ -41,7 +39,7 @@ export default class NotesController {
 
     if (!isSave) throw new Error("Failed to store note to the database.");
 
-    return Response.send(res, Response.CREATED, "New note added.");
+    return Response.send(res, Response.CREATED, isSave);
   }
 
   static async update(req, res) {
@@ -59,7 +57,7 @@ export default class NotesController {
 
      if (!isUpdated) throw new Error("Failed to update the note.");
 
-     return Response.send(res, Response.SUCCESS, "Note has been updated.");
+     return Response.send(res, Response.SUCCESS, isUpdated);
   }
 
   static async destroy(req, res) {
@@ -70,6 +68,6 @@ export default class NotesController {
 
     if(!isDelete) throw new Error("Failed to delete the note.");
 
-    return Response.send(res, Response.SUCCESS, "Note has been deleted.");
+    return Response.send(res, Response.SUCCESS, isDelete);
   }
 }
