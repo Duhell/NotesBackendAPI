@@ -69,4 +69,13 @@ export default class NotesController {
 
     return Response.send(res, Response.SUCCESS, isDelete);
   }
+
+  static async addLike(req, res){
+    const filter = {_id: ObjectId.createFromHexString(req.params.id) };
+    const updateDocs = {likes: req.body};
+    const options = {upsert: true,new: true};
+    const note = await Note.findThenUpdate(filter, updateDocs,"$push",options );
+    if(!note) return Response.send(res, Response.BAD_REQUEST, "Bad Request");
+    return Response.send(res, Response.SUCCESS, isUpdated);
+  }
 }
