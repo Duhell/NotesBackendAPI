@@ -60,4 +60,26 @@ export default class AuthController {
       return Response.send(res, Response.INTERNAL_ERROR, 'Internal server error');
     }
   }
+
+  static async Logout(req,res){
+    try {
+      const isLogout = await User.logout(req);
+      if(!isLogout){
+        return Response.send(res, Response.BAD_REQUEST, {
+          message: "Bad request",
+          error: error
+        });
+      } 
+
+      return Response.send(res, Response.SUCCESS, {
+        message: "You have been logout.",
+      });
+    } catch (error) {
+      Log.error(error, 'Logout');
+      return Response.send(res, Response.UNAUTHORIZED, {
+        message: 'NOT AUTHORIZED',
+        error: error
+      });
+    }
+  }
 } 
