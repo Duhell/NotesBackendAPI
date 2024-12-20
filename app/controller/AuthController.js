@@ -36,11 +36,9 @@ export default class AuthController {
       
       if (validationError) return validationError;
 
-      const user = await User.findEmail({ email: req.body.email });
-      
-      const isPasswordValid = await User.isPasswordValid(req.body.password, user.password);
-      
-      if (!user || !isPasswordValid) {
+      const user = await User.login(req);
+        
+      if (!user) {
         return Response.send(res, Response.FORBIDDEN, {
           message: 'Wrong email or password.',
           user: null,
