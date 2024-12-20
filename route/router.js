@@ -12,6 +12,10 @@ router.post("/auth/login", [uploadMulterImage.none(),Validation.Login()],  AuthC
 
 router.get('/notes/', BearerTokenAuth, NotesController.index);
 router.get('/notes/:id', BearerTokenAuth, NotesController.index);
+router.post('/notes/addLike/:id', BearerTokenAuth, NotesController.addLike);
 router.post('/notes/create', [BearerTokenAuth,uploadMulterImage.single('image'),Validation.Notes()], NotesController.create);
 router.patch('/notes/:id', [BearerTokenAuth, Validation.Notes()], NotesController.update);
 router.delete('/notes/:id', BearerTokenAuth, NotesController.destroy);
+
+
+router.post("/auth/logout",BearerTokenAuth,  AuthController.Logout);
