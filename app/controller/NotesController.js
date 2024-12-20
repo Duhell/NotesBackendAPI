@@ -20,7 +20,6 @@ export default class NotesController {
 
     let isSave;
     if(req.body.image){
-      // const file = await datauri(req);
       
       const cloudinary = new Cloudinary();
       const uploadPhoto = await cloudinary.UploadImage(req.body.image);
