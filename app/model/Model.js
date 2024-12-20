@@ -66,6 +66,17 @@ export default class Model {
     }
   }
 
+  static async findThenUpdate(filter, update, $operator , options = {}){
+    try {
+      const collection = await this.getCollection();
+      return await collection.findOneAndUpdate(filter, {
+        [$operator]:  {...update}
+      } , options);
+    } catch (error) {
+      return Log.error(error, "updateOne");
+    }
+  }
+
   static async updateMany(filter, update, options = {}) {
     try {
       const collection = await this.getCollection();
