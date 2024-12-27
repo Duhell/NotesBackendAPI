@@ -7,10 +7,19 @@ import Cloudinary from "../../database/Cloudinary.js";
 export default class NotesController {
 
   static async index(req, res) {
+    let notes = req.params.id ? 
+      await Note.all({"user_id": req.params.id }) : 
+      await Note.all({"isPrivate": false});
+  
+    const cloudinary = new Cloudinary();
+    notes = await Promise.all(notes.map(async (note) => {
+      if (note.image) {
+        note.image = await cloudinary.OptimizePhoto(note.image);
+      }
+      return note;
+    }));
 
-    const notes = req.params.id ? await Note.all({"user_id": req.params.id }) : await Note.all({"isPrivate": false});
     return res.json({notes});
-
   }
 
   static async create(req, res) {
@@ -22,14 +31,13 @@ export default class NotesController {
     if(req.body.image){
       
       const cloudinary = new Cloudinary();
-      const uploadPhoto = await cloudinary.UploadImage(req.body.image);
-      const image = await uploadPhoto.url;
+      const generatedImageId = await cloudinary.UploadImage(req.body.image);
 
       if(!image){
         return Response.send(res, Response.INTERNAL_ERROR, "It is not you. It's us. Please comeback later.");
       }
   
-      isSave = await Note.insertOne({...req.body,image: image})
+      isSave = await Note.insertOne({...req.body,image: generatedImageId})
     }else{
       isSave = await Note.insertOne(req.body);
     }
