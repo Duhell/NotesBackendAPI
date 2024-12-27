@@ -10,21 +10,30 @@ export default class Cloudinary {
   }
 
   async UploadImage(imageDataUri) {
+    const generatedPublicId = crypto.randomUUID();
+    const folderName = "WDS";
     const uploaded = await cloudinary.uploader.upload(imageDataUri, {
-      public_id: crypto.randomUUID(),
+      folder: folderName,
+      public_id: generatedPublicId,
     });
 
     if (!uploaded) {
       return console.error("File was not uploaded.");
     }
 
-    return uploaded;
+    return generatedPublicId;
   }
 
-  async OptimizePhoto(url) {
-    return cloudinary.url(url, {
+  async OptimizePhoto(public_id) {
+    const optimizedUrl = cloudinary.url(public_id, {
       fetch_format: "auto",
       quality: "auto",
+      height: 394,
+      aspect_ratio:"16:9",
+      crop:"fill"
     });
+    console.log("Optimized URL:", optimizedUrl);
+    return optimizedUrl;
   }
+  
 }
