@@ -106,4 +106,14 @@ export default class Model {
       throw error;
     }
   }
+
+  static async count(filter){
+    try{
+      const collection =  await this.getCollection();
+      const count = await collection.countDocuments(filter);
+      return count;
+    }catch(error){
+      return Log.error(error, "count");
+    }
+  }
 }
