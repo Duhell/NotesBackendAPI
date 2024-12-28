@@ -83,6 +83,6 @@ export default class NotesController {
     const options = {upsert: true,new: true};
     const note = await Note.findThenUpdate(filter, updateDocs,"$push",options );
     if(!note) return Response.send(res, Response.BAD_REQUEST, "Bad Request");
-    return Response.send(res, Response.SUCCESS, isUpdated);
+    return Response.send(res, Response.SUCCESS, note);
   }
 }
