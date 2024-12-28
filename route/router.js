@@ -20,5 +20,6 @@ router.delete('/notes/:id', BearerTokenAuth, NotesController.destroy);
 
 router.get('/users/',BearerTokenAuth, UserController.getAllUsers);
 router.get('/users/active',BearerTokenAuth, UserController.getActiveUsers);
+router.post("/users/search", BearerTokenAuth, UserController.searchUser);
 
 router.post("/auth/logout",BearerTokenAuth,  AuthController.Logout);
