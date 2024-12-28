@@ -1,5 +1,7 @@
 import { ObjectId } from "mongodb";
 import Note from "../model/Note.js";
+import Like from "../model/Like.js";
+import Comment from "../model/Comment.js";
 import {ValidateRequest} from '../../utils/validation/Request.js';
 import Response from "../../utils/response/Response.js";
 import Cloudinary from "../../database/Cloudinary.js";
@@ -78,11 +80,55 @@ export default class NotesController {
   }
 
   static async addLike(req, res){
-    const filter = {_id: ObjectId.createFromHexString(req.params.id) };
-    const updateDocs = {likes: req.body};
-    const options = {upsert: true,new: true};
-    const note = await Note.findThenUpdate(filter, updateDocs,"$push",options );
-    if(!note) return Response.send(res, Response.BAD_REQUEST, "Bad Request");
-    return Response.send(res, Response.SUCCESS, note);
+
+    const newLike = await Like.insertOne(req.body);
+
+    if(!newLike) return Response.send(res, Response.INTERNAL_ERROR, "Sorry, it is not you but us. Please try again later.");
+
+    return Response.send(res, Response.SUCCESS, newLike);
+  }
+
+  static async addComment(req, res){
+
+    if(!req.body.comment || req.body.comment.trim() === ""){
+      return Response.send(res, Response.BAD_REQUEST, "Comment is empty.");
+    }
+    const newComment = await Comment.insertOne(req.body);
+    
+    if(!newComment) return Response.send(res, Response.INTERNAL_ERROR, "Sorry, it is not you but us. Please try again later.");
+
+    return Response.send(res, Response.SUCCESS, newComment);
+  }
+
+  static async getLikes(req,res){
+
+    const note_id = req.body.note_id;
+
+    const likes = await Like.all({"note_id": note_id})
+
+    if(!likes) return Response.send(res, Response.SUCCESS,{likes: 0});
+
+    return Response.send(res,Response.SUCCESS, {likes: likes});
+
+  }
+
+  static async getComments(req,res){
+
+    const note_id = req.body.note_id;
+
+    const comments = await Comment.all({"note_id": note_id})
+
+    if(!comments) return Response.send(res, Response.SUCCESS,{comments: 0});
+
+    return Response.send(res,Response.SUCCESS, {comments: comments});
+  }
+
+  static async getTotalComments(req,res){
+    
+    const note_id = req.params.id;
+
+    const totalCount = await Comment.count({"note_id": note_id});
+
+    return Response.send(res, Response.SUCCESS, {countedComments: totalCount});
   }
 }
