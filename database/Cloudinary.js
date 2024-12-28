@@ -28,7 +28,7 @@ export default class Cloudinary {
     const optimizedUrl = cloudinary.url(public_id, {
       fetch_format: "auto",
       quality: "auto",
-      height: 394,
+      height: 450,
       aspect_ratio:"16:9",
       crop:"fill"
     });
